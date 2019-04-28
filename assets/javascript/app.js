@@ -11,3 +11,13 @@ const question = {
         
     }
 }
+
+$('#start').on('click',function(){
+    event.preventDefault();
+
+        
+
+
+
+
+})

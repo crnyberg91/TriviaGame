@@ -1,8 +1,10 @@
 .container {
     background: #ffffff;
-    margin: 5rem;
+    margin: 10rem;
     text-align: center;
+    border: 3px solid #666;
+    height: 200px;
 }
 body{
-    background: #666;
+    background-color: rgb(228, 44, 44);
 }
