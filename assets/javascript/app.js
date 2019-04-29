@@ -9,6 +9,8 @@ var timerRunning = false;
 var nextQuestion = false;
 var intervalId;
 var nextQTime;
+var answerClick = false;
+
 
 const question = {
     q: 'is this working',
@@ -22,6 +24,20 @@ const question = {
     }
 }
 
+const question2 = {
+    q: 'is this working2',
+    a: 'a2',
+    b: 'b2',
+    c: 'c2',
+    d: 'd2',
+    gif: 'giphyurl',
+    correct() {
+
+    }
+}
+var questionArr = [question, question2];
+
+
 function timer() {
     $('#start').remove()
     $('#time-line').html(`<p>30 seconds left</p>`);
@@ -30,6 +46,7 @@ function timer() {
         timerRunning = true;
         intervalId = setInterval(countdown, 1000);
         displayQuestion();
+        nextQTime = 10;
     }
 }
 
@@ -47,6 +64,9 @@ function countdown() {
         stop();
         console.log('times up');
         answered();
+    } else if(answerClick){
+        stop();
+        console.log('clicked an answer')
     }
  
     // if (timeLeft === 0) {
@@ -55,16 +75,18 @@ function countdown() {
 }
 
 function displayQuestion() {
-    $('#questions-box').append(`<h2>${question.q}<h2>`);
-    $('#questions-box').append(`<h4><a>A: ${question.a}</a></h4>`);
-    $('#questions-box').append(`<h4><a>A: ${question.b}</a></h4>`);
-    $('#questions-box').append(`<h4><a>A: ${question.c}</a></h4>`);
-    $('#questions-box').append(`<h4><a>A: ${question.d}</a></h4>`);
+    let i= 0;
+    $('#questions-box').append(`<h2>${questionArr[i].q}<h2>`);
+    $('#questions-box').append(`<h4>A: ${questionArr[i].a}</h4>`);
+    $('#questions-box').append(`<h4>B: ${questionArr[i].b}</h4>`);
+    $('#questions-box').append(`<h4>C: ${questionArr[i].c}</h4>`);
+    $('#questions-box').append(`<h4>D: ${questionArr[i].d}</h4>`);
+    i++;
 }
 
 function answered() {
     $('#questions-box').empty()
-    nextQTime = setInterval(timer, 1000 * 10);
+    nextQTime = setInterval(timer, 1000 * 5);
     $('#questions-box').append('it works');
     console.log(nextQTime)
     timeLeft = 10;
