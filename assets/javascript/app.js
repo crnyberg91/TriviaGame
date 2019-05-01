@@ -1,6 +1,5 @@
 window.onload = function () {
     $('#start').on('click', timer);
-
 }
 
 let timeLeft = 10;
@@ -153,7 +152,7 @@ function countdown() {
 
 function nextQTimeF() {
     $('#questions-box').empty();
-    nextQTime = setInterval(timer, 1000 * 5);
+    nextQTime = setTimeout(timer, 1000 * 5);
     timeLeft = 10;
 }
 
@@ -163,7 +162,7 @@ function renderGif() {
         method: 'GET'
     }).then(function (response) {
         answerGif = response[0].url;
-        
+        console.log(answerGif);
     })
 }
 
@@ -207,6 +206,7 @@ function answerSelect() {
         answer = $(this).val();
         answerClick = true;
         console.log(answer);
+        stop();
         answered();
     });
 }
@@ -248,6 +248,7 @@ function endScreen() {
     <div class='reset-box'>
     <button class='reset-button' id='reset'>Play Again?</button>
     `);
+    reset();
 }
 
 function reset() {
