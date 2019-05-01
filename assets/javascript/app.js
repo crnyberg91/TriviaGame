@@ -1,47 +1,125 @@
-window.onload = function() {
-    $('#start').on('click', timer)
-    
+window.onload = function () {
+    $('#start').on('click', timer);
+
 }
 
-let correct = false;
 let timeLeft = 10;
-var timerRunning = false;
-var nextQuestion = false;
-var intervalId;
-var nextQTime;
-var answerClick = false;
+let timerRunning = false;
+let nextQuestion = false;
+let intervalId;
+let nextQTime;
+let answerClick = false;
+let i = 0;
+let answer;
+let correctCount = 0;
+let wrongCount = 0;
+let queryURL;
+let answerGif;
+const gifBox =$('<img>');
 
 
 const question = {
-    q: 'is this working',
-    a: 'a',
-    b: 'b',
-    c: 'c',
-    d: 'd',
-    gif: 'giphyurl',
-    correct() {
-
-    }
+    q: "Who played Jimmy 'Popeye' Doyle in 'The French Connection'?",
+    a: 'Gene Hackman',
+    b: 'Christopher Walken',
+    c: 'Marlon Brando',
+    d: 'Steve Mcqueen',
+    movieGif: 'Gene Hackman',
+    correct: 'a'
 }
 
 const question2 = {
-    q: 'is this working2',
-    a: 'a2',
-    b: 'b2',
-    c: 'c2',
-    d: 'd2',
-    gif: 'giphyurl',
-    correct() {
-
-    }
+    q: 'Who directed psycho?',
+    a: 'Stanley Kubrick',
+    b: 'Alfred Hitchcock',
+    c: 'David Lean',
+    d: 'Michael Curtiz',
+    movieGif: 'alfred hitchcock',
+    correct: 'b'
 }
-var questionArr = [question, question2];
+const question3 = {
+    q: "which actor was in 'The Godfather', 'Dog Day Afternoon', and 'The Conversation'?",
+    a: 'Al Pacino',
+    b: 'Robert Duvall',
+    c: 'John Cazale',
+    d: 'Allen Garfield',
+    movieGif: 'giphyurl',
+    correct: 'c'
+}
+const question4 = {
+    q: "Finish this quote: 'Charlie don't __!",
+    a: 'ski',
+    b: 'surf',
+    c: 'ride',
+    d: 'sleep',
+    movieGif: 'giphyurl',
+    correct: 'b'
+}
+const question5 = {
+    q: "What is the name givento the alien in the movie 'Alien'?",
+    a: 'yautja',
+    b: 'metroid',
+    c: 'skrull',
+    d: 'xenomorph',
+    movieGif: 'giphyurl',
+    correct: 'd'
+}
+const question6 = {
+    q: "What Japanese movie is regarded as the first 'kaiju' film?",
+    a: 'Gojira',
+    b: 'Rodan',
+    c: 'Mothra',
+    d: 'Gamera',
+    movieGif: 'giphyurl',
+    correct: 'a'
+}
+const question7 = {
+    q: "the original King Kong came out in what year?",
+    a: '1940',
+    b: '1933',
+    c: '1952',
+    d: '1924',
+    movieGif: 'giphyurl',
+    correct: 'b'
+}
+const question8 = {
+    q: 'Before they were a successfull movie director, they started off as a director of skate videos and music videos. who were they?',
+    a: 'Joel Coen',
+    b: 'Quentin Tarantino',
+    c: 'Spike Jonze',
+    d: 'Christopher Nolan',
+    movieGif: 'giphyurl',
+    correct: 'c'
+}
+const question9 = {
+    q: 'what actress won the oscar for actress in a supporting role in 1993?',
+    a: 'Susan Surandon',
+    b: 'Helen Mirren',
+    c: 'Kathy Bates',
+    d: 'Marisa Tomei',
+    movieGif: 'giphyurl',
+    correct: 'd'
+}
+const question10 = {
+    q: "What car was Barry Newman driving the 1971 movie 'Vanishing Point'",
+    a: 'Challenger',
+    b: 'Camaro',
+    c: 'Fairlady z',
+    d: 'GT40',
+    movieGif: 'giphyurl',
+    correct: 'a'
+}
+
+//array of questions thatll loop through as timer gets reset
+const questionArr = [question, question2, question3, question4, question5, question6, question7, question8, question9, question10];
+// const gif = $("<img>").attr("src", queryURL);
+
 
 
 function timer() {
-    $('#start').remove()
-    $('#time-line').html(`<p>30 seconds left</p>`);
-    
+    $('#start').remove();
+    $('#time-line').html(`<p>10 seconds left</p>`);
+
     if (!timerRunning) {
         timerRunning = true;
         intervalId = setInterval(countdown, 1000);
@@ -50,12 +128,14 @@ function timer() {
     }
 }
 
+//stop function, switches timeRunning to false
 function stop() {
     clearInterval(intervalId);
     timerRunning = false;
     //answered function
 }
 
+//
 function countdown() {
     timeLeft--;
     $('#time-line').html(`<p>${timeLeft} seconds left</p>`);
@@ -64,33 +144,117 @@ function countdown() {
         stop();
         console.log('times up');
         answered();
-    } else if(answerClick){
+    } else if (answerClick) {
         stop();
-        console.log('clicked an answer')
+        console.log('clicked an answer');
     }
- 
-    // if (timeLeft === 0) {
-    //     timerRunning = false;
-    // }
 }
 
+
+function nextQTimeF() {
+    $('#questions-box').empty();
+    nextQTime = setInterval(timer, 1000 * 5);
+    timeLeft = 10;
+}
+
+function renderGif() {
+    $.ajax({
+        url: queryURL,
+        method: 'GET'
+    }).then(function (response) {
+        answerGif = response[0].url;
+        
+    })
+}
+
+
 function displayQuestion() {
-    let i= 0;
-    $('#questions-box').append(`<h2>${questionArr[i].q}<h2>`);
-    $('#questions-box').append(`<h4>A: ${questionArr[i].a}</h4>`);
-    $('#questions-box').append(`<h4>B: ${questionArr[i].b}</h4>`);
-    $('#questions-box').append(`<h4>C: ${questionArr[i].c}</h4>`);
-    $('#questions-box').append(`<h4>D: ${questionArr[i].d}</h4>`);
+
+    $('#questions-box').empty();
+    nextQTime = 0;
+    answerClick = false;
+
+    $('#questions-box').append(`<h2>${questionArr[i].q}<h2>
+    <div class='answer-box'>
+    <button class='answer-button btn btn-outline-primary' id='a' value='a'>A: ${questionArr[i].a}</button>
+    </div>
+    <div class='answer-box'>
+    <button class='answer-button btn btn-outline-primary' id='b' value='b'>B: ${questionArr[i].b}</button>
+    </div>
+    <div class='answer-box'>
+    <button class='answer-button btn btn-outline-primary' id='c' value='c'>C: ${questionArr[i].c}</button>
+    </div>
+    <div class='answer-box'>
+    <button class='answer-button btn btn-outline-primary' id='d' value='d'>D: ${questionArr[i].d}</button>
+    </div>`);
+    $(`#${questionArr[i].correct}`).val();
+    correctChoice = questionArr[i].correct;
+    queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        questionArr[i].movieGif + "&api_key=71CC8xrnJJ8IIjyInSFxGAU5bUlFj3BU&limit=1";
+
+
+    console.log('correct choice ' + correctChoice);
+    answerSelect();
+
     i++;
+    if (i === 10) {
+        endScreen();
+    }
+}
+
+function answerSelect() {
+    $('.answer-button').on('click', function () {
+        answer = $(this).val();
+        answerClick = true;
+        console.log(answer);
+        answered();
+    });
 }
 
 function answered() {
-    $('#questions-box').empty()
-    nextQTime = setInterval(timer, 1000 * 5);
-    $('#questions-box').append('it works');
-    console.log(nextQTime)
-    timeLeft = 10;
-    //when next question timer === 0, change timeRunning to true
-    //display next question
+    if (timeLeft === 0) {
+        nextQTimeF();
+        $('#questions-box').append('Times Up');
+        //display gif
+        wrongCount++;
+
+    } else if (answer === correctChoice) {
+        stop();
+        nextQTimeF();
+        $('#questions-box').append('Correct');
+        $('#questions-box').append(gifBox);
+        correctCount++;
+        console.log(nextQTime);
+    }
+    else {
+        stop();
+        nextQTimeF();
+        $('#questions-box').append('Wrong');
+        $('#questions-box').append(gifBox);
+        wrongCount++;
+        console.log(nextQTime);
+    }
+    gifBox.attr("src",answerGif);
+    
 }
 
+function endScreen() {
+    stop();
+    $('#questions-box').empty();
+    $('#questions-box').append(`
+    <h2>Finished!</h2>
+    <h5>Answers Correct: ${correctCount}</h5>
+    <h5>Answers Correct: ${wrongCount}</h5>
+    <div class='reset-box'>
+    <button class='reset-button' id='reset'>Play Again?</button>
+    `);
+}
+
+function reset() {
+    $('#reset').on('click', function () {
+        wrongCount = 0;
+        correctCount = 0;
+        i = 0;
+        displayQuestion();
+    })
+};
